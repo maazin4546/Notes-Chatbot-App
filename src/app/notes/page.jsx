@@ -1,12 +1,20 @@
-import React from 'react'
+import prisma from "../../lib/db/prisma"
+import { auth } from "@clerk/nextjs"
 
 export const metadata = {
-    title:"Chatbot - Notes"
+  title: "Chatbot - Notes"
 }
 
-const Notes = () => {
+const Notes = async () => {
+
+  const { userId } = auth()
+
+  if (!userId) throw Error("userId undefined")
+
+  const allNotes = await prisma.note.findMany({ where: { userId } })
+
   return (
-    <div> Notes</div>
+    <div> {JSON.stringify(allNotes)}</div>
   )
 }
 
